@@ -1,9 +1,9 @@
-﻿using WebSiteAutoParts.Models.Data;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WebSiteAutoParts.Models.Data;
 
-namespace WebSiteAutoParts.Models.Data
+
+namespace WebSiteAutoParts.Models
 {
     public class AppCtx : IdentityDbContext<User>
     {
@@ -12,5 +12,7 @@ namespace WebSiteAutoParts.Models.Data
         {
             Database.EnsureCreated();
         }
+        public DbSet<Category> Categories { get; set; }
     }
+
 }
