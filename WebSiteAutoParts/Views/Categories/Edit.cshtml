@@ -1,11 +1,22 @@
-﻿@model WebSiteAutoParts.Models.Data.Category
-
+﻿@model WebSiteAutoParts.ViewModels.Categories.EditCategoryViewModel
 @{
-    ViewData["Title"] = "Редактировать";
+    ViewData["Title"] = "Редактирование - категории";
 }
 
-<h1>Редактировать</h1>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Главная</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Categories" asp-action="Index">Категории</a></li>
+        <li class="breadcrumb-item active">Редактирование</li>
+    </ol>
+</nav>
 
+<h3>
+    <a class="btn text-dark" asp-action="Index" title="Вернуться к списку">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    Редактировать категорию
+</h3>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -22,10 +33,6 @@
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Вернуться к списку</a>
 </div>
 
 @section Scripts {

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebSiteAutoParts.Models;
 using WebSiteAutoParts.Models.Data;
+using WebSiteAutoParts.ViewModels.Categories;
 
 namespace WebSiteAutoParts.Controllers
 {
@@ -22,8 +18,11 @@ namespace WebSiteAutoParts.Controllers
         // GET: Categories
         public async Task<IActionResult> Index()
         {
-              return _context.Categories != null ? 
-                          View(await _context.Categories.ToListAsync()) :
+            var appCtx = _context.Categories
+                .OrderBy(f => f.CategoryName);
+
+            return _context.Categories != null ? 
+                          View(await appCtx.ToListAsync()) :
                           Problem("Entity set 'AppCtx.Categories'  is null.");
         }
 
@@ -52,19 +51,29 @@ namespace WebSiteAutoParts.Controllers
         }
 
         // POST: Categories/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CategoryName")] Category category)
+        public async Task<IActionResult> Create(CreateCategoryViewModel model)
         {
+            if (_context.Categories
+                .Where(f => f.CategoryName == model.CategoryName)
+                .FirstOrDefault() != null)
+            {
+                ModelState.AddModelError("", "Введеная категория уже существует");
+            }
+
             if (ModelState.IsValid)
             {
+                Category category= new()
+                {
+                    CategoryName= model.CategoryName
+                };
+
                 _context.Add(category);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            return View(model);
         }
 
         // GET: Categories/Edit/5
@@ -80,7 +89,13 @@ namespace WebSiteAutoParts.Controllers
             {
                 return NotFound();
             }
-            return View(category);
+
+            EditCategoryViewModel model = new()
+            {
+                Id = category.Id,
+                CategoryName = category.CategoryName
+            };
+            return View(model);
         }
 
         // POST: Categories/Edit/5
@@ -88,8 +103,16 @@ namespace WebSiteAutoParts.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(short id, [Bind("Id,CategoryName")] Category category)
+        public async Task<IActionResult> Edit(short id, EditCategoryViewModel model)
         {
+            Category category = await _context.Categories.FindAsync(id);
+
+            if (_context.Categories
+             .Where(f => f.CategoryName == model.CategoryName)
+            .FirstOrDefault() != null)
+            {
+                ModelState.AddModelError("", "Введеная категория уже существует");
+            }
             if (id != category.Id)
             {
                 return NotFound();
@@ -99,6 +122,7 @@ namespace WebSiteAutoParts.Controllers
             {
                 try
                 {
+                    category.CategoryName = model.CategoryName;
                     _context.Update(category);
                     await _context.SaveChangesAsync();
                 }
@@ -115,7 +139,7 @@ namespace WebSiteAutoParts.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            return View(model);
         }
 
         // GET: Categories/Delete/5

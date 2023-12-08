@@ -6,7 +6,7 @@ namespace WebSiteAutoParts.ViewModels.Categories
     {
         public short Id { get; set; }
 
-        [Required(ErrorMessage = "Введите наименовании категории")]
+        [Required(ErrorMessage = "Введите наименование категории")]
         [Display(Name = "Категория")]
         public string CategoryName { get; set; }
     }

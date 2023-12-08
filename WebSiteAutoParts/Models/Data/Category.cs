@@ -12,5 +12,9 @@ namespace WebSiteAutoParts.Models.Data
         [Required(ErrorMessage = "Введите название категории")]
         [Display(Name = "Категория")]
         public string CategoryName { get; set; }
+
+        //Навигационные свойства
+        public ICollection<Spare> Spares { get; set; }
+
     }
 }

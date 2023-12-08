@@ -13,6 +13,8 @@ namespace WebSiteAutoParts.Models
             Database.EnsureCreated();
         }
         public DbSet<Category> Categories { get; set; }
+
+        public DbSet<Spare> Spares { get; set; }
     }
 
 }
